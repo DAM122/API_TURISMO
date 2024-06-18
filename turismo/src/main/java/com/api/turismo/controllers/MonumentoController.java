@@ -37,4 +37,34 @@ public class MonumentoController {
     public List<Monumento> getMonumentosByLocalidadId(@RequestParam("localidadId") Long localidadId) {
         return monumentoService.getMonumentosByLocalidadId(localidadId);
     }
+
+    @PostMapping
+    public ResponseEntity<Monumento> createMonumento(@RequestBody Monumento monumento) {
+        try {
+            Monumento savedMonumento = monumentoService.saveMonumento(monumento);
+            return new ResponseEntity<>(savedMonumento, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<Void> deleteMonumento(@PathVariable Long id) {
+        try {
+            monumentoService.deleteMonumento(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Monumento> updateMonumento(@PathVariable Long id, @RequestBody Monumento newMonumento) {
+        try {
+            Monumento updatedMonumento = monumentoService.updateMonumento(id, newMonumento);
+            return new ResponseEntity<>(updatedMonumento, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

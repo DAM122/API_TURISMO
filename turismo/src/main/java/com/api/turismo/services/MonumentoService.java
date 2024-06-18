@@ -31,4 +31,33 @@ public class MonumentoService {
     public List<Monumento> getMonumentosByLocalidadId(Long localidadId) {
         return monumentoRepository.findAllByLocalidadId(localidadId);
     }
+
+    @Transactional
+    public Monumento saveMonumento(Monumento monumento) {
+        return monumentoRepository.save(monumento);
+    }
+    @Transactional
+    public void deleteMonumento(Long id) {
+        monumentoRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Monumento updateMonumento(Long id, Monumento newMonumento) {
+        return monumentoRepository.findById(id).map(monumento -> {
+            monumento.setNombre(newMonumento.getNombre());
+            monumento.setFecha(newMonumento.getFecha());
+            monumento.setEstilo(newMonumento.getEstilo());
+            monumento.setDescripcion(newMonumento.getDescripcion());
+            monumento.setVisitable(newMonumento.isVisitable());
+            monumento.setParking(newMonumento.isParking());
+            monumento.setTelefono(newMonumento.getTelefono());
+            monumento.setImagen(newMonumento.getImagen());
+            monumento.setValoracion(newMonumento.getValoracion());
+            monumento.setLocalidad(newMonumento.getLocalidad());
+            return monumentoRepository.save(monumento);
+        }).orElseGet(() -> {
+            newMonumento.setId(id);
+            return monumentoRepository.save(newMonumento);
+        });
+    }
 }
